@@ -1,0 +1,49 @@
+Given an unsorted array Arr of size N of positive integers. One number 'A' from set {1, 2,....,N} is missing and one number 'B' occurs twice in array. Find these two numbers.
+
+Example 1:
+
+Input:
+N = 2
+Arr[] = {2, 2}
+Output: 2 1
+Explanation: Repeating number is 2 and 
+smallest positive missing number is 1.
+.
+
+
+
+def findMissingAndRepeating(arr, n):
+    xor = 0
+    for i in range(n):
+        xor ^= arr[i] ^ (i + 1)
+
+    # Find the rightmost set bit in xor
+    rightmost_set_bit = xor & -xor
+
+    missing = 0
+    repeating = 0
+
+    for i in range(n):
+        if (arr[i] & rightmost_set_bit) == 0:
+            missing ^= arr[i]
+        else:
+            repeating ^= arr[i]
+
+    for i in range(1, n + 1):
+        if (i & rightmost_set_bit) == 0:
+            missing ^= i
+        else:
+            repeating ^= i
+
+    for num in arr:
+        if num == missing:
+            return repeating, missing
+
+    return missing, repeating
+
+# Example usage:
+if __name__ == "__main__":
+    arr = [2, 2]
+    n = len(arr)
+    repeating, missing = findMissingAndRepeating(arr, n)
+    print(repeating, missing)
